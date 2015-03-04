@@ -1,4 +1,33 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/map" tools:context=".MapsActivity"
-    android:name="com.google.android.gms.maps.SupportMapFragment" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText android:id="@+id/locEdit"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight=".80"
+            android:hint="@string/search_hint"
+            android:background="@color/wallet_highlighted_text_holo_light"/>
+        <Button android:id="@+id/searchButton"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight=".20"
+            android:text="@string/search_button_text"
+            android:paddingTop="@dimen/abc_text_size_body_1_material"/>
+    </LinearLayout>
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/map"
+        tools:context=".MapsActivity"
+        android:name="com.google.android.gms.maps.MapFragment"
+        tools:layout="@layout/activity_maps" >
+
+    </fragment>
+
+</LinearLayout>
+
