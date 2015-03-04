@@ -17,7 +17,7 @@
             android:layout_height="50dp"
             android:layout_weight=".20"
             android:text="@string/search_button_text"
-            android:paddingTop="@dimen/abc_text_size_body_1_material"/>
+            android:onClick="addressLookup"/>
     </LinearLayout>
     <fragment
         android:layout_width="match_parent"

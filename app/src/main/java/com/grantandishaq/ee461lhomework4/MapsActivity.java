@@ -8,6 +8,9 @@ import com.google.android.gms.maps.model.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import android.location.*;
 import android.content.Context;
+import android.view.View;
+import android.widget.EditText;
+import android.util.Log;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
@@ -22,6 +25,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    public void addressLookup(View view){
+        EditText addrEdit = (EditText)findViewById(R.id.locEdit);
+        String apiKey = getString(R.string.google_maps_key);
+        String baseUrl = getString(R.string.geocode_url);
+        String address = addrEdit.getText().toString();
+        Log.v("EditText",address);
     }
 
     /*@Override
