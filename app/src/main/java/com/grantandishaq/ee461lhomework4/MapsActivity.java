@@ -11,6 +11,9 @@ import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
 import android.util.Log;
+import java.net.HttpURLConnection;
+import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
@@ -27,11 +30,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
+
+
+    public void goToAddress(LatLng coord, String address){
+        MapFragment mapFrag = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        GoogleMap map = mapFrag.getMap();
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 10));
+        map.addMarker(new MarkerOptions()
+                .title("Your Search")
+                .snippet(address)
+                .position(coord));
+    }
+
+
     public void addressLookup(View view){
         EditText addrEdit = (EditText)findViewById(R.id.locEdit);
         String apiKey = getString(R.string.google_maps_key);
         String baseUrl = getString(R.string.geocode_url);
         String address = addrEdit.getText().toString();
+        Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
+        try{
+            List<Address> places = geo.getFromLocationName(address, 1);
+            if(places.isEmpty()){
+                Log.v("Search","No results found");
+            }else{
+                double addrLat = places.get(0).getLatitude();
+                double addrLong = places.get(0).getLongitude();
+                LatLng place = new LatLng(addrLat, addrLong);
+                goToAddress(place, address);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        //address = address.replace(' ','+');
         Log.v("EditText",address);
     }
 
