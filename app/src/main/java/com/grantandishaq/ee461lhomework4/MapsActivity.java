@@ -69,7 +69,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String addr = xpath.evaluate("/GeocodeResponse/result/formatted_address", source3);
                     Log.v("ADDRESS", addr);
                     String lat = xpath.evaluate("/GeocodeResponse/result/geometry/location/lat", source1);
-                    String lng = xpath.evaluate("/GeocodeResponse/result/geometry/location/long", source2);
+                    String lng = xpath.evaluate("/GeocodeResponse/result/geometry/location/lng", source2);
+                    double latitude = Double.parseDouble(lat);
+                    double longitude = Double.parseDouble(lng);
+                    LatLng loc = new LatLng(latitude, longitude);
+                    goToAddress(loc, addr);
                     Log.v("LATLNG", "Lat= " + lat + " Lng= " + lng );
                 }catch (Exception e){
                     e.printStackTrace();
