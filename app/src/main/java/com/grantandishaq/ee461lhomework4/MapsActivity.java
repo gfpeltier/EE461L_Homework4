@@ -11,9 +11,10 @@ import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
 import android.util.Log;
-import java.net.HttpURLConnection;
-import java.util.List;
 import java.util.Locale;
+import javax.xml.xpath.*;
+import org.xml.sax.InputSource;
+import java.io.StringReader;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
@@ -35,7 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void goToAddress(LatLng coord, String address){
         MapFragment mapFrag = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
         GoogleMap map = mapFrag.getMap();
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 10));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 16));
         map.addMarker(new MarkerOptions()
                 .title("Your Search")
                 .snippet(address)
@@ -45,25 +46,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void addressLookup(View view){
         EditText addrEdit = (EditText)findViewById(R.id.locEdit);
-        String apiKey = getString(R.string.google_maps_key);
+        String apiKey = (String)getText(R.string.google_maps_key);
         String baseUrl = getString(R.string.geocode_url);
         String address = addrEdit.getText().toString();
+        //address = address.replace(' ','+');
+        RetrieveAddressData retrieve = new RetrieveAddressData();
+        retrieve.execute(baseUrl, address, apiKey);
+        retrieve.setMyTaskCompleteListener(new RetrieveAddressData.OnTaskComplete() {
+            @Override
+            public void setMyTaskComplete(String xml) {
+                Log.v("HOPEFULLY REAL XML", xml);
+
+                XPathFactory xpathFactory = XPathFactory.newInstance();
+                XPath xpath = xpathFactory.newXPath();
+
+                InputSource source1 = new InputSource(new StringReader(xml));
+                InputSource source2 = new InputSource(new StringReader(xml));
+
+                InputSource source3 = new InputSource(new StringReader(xml));
+
+                try {
+                    String addr = xpath.evaluate("/GeocodeResponse/result/formatted_address", source3);
+                    Log.v("ADDRESS", addr);
+                    String lat = xpath.evaluate("/GeocodeResponse/result/geometry/location/lat", source1);
+                    String lng = xpath.evaluate("/GeocodeResponse/result/geometry/location/long", source2);
+                    Log.v("LATLNG", "Lat= " + lat + " Lng= " + lng );
+                }catch (Exception e){
+                    e.printStackTrace();
+                    String msg = e.getMessage();
+                    Log.e("SAXERROR", ""+msg);
+                }
+
+            }
+        });
         Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
-        try{
+        /*try{
             List<Address> places = geo.getFromLocationName(address, 1);
             if(places.isEmpty()){
                 Log.v("Search","No results found");
             }else{
                 double addrLat = places.get(0).getLatitude();
                 double addrLong = places.get(0).getLongitude();
+                String addrL12 = places.get(0).getAddressLine(0);
+                addrL12 += ",\n" + places.get(0).getAddressLine(1);
                 LatLng place = new LatLng(addrLat, addrLong);
-                goToAddress(place, address);
+                goToAddress(place, addrL12);
             }
         }catch(Exception e){
             e.printStackTrace();
-        }
+        }*/
+        //String charset = "UTF-8";
         //address = address.replace(' ','+');
-        Log.v("EditText",address);
+        //Log.v("EditText", address);
     }
 
     /*@Override
