@@ -5,20 +5,35 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import android.location.*;
 import android.content.Context;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 import java.util.Locale;
 import javax.xml.xpath.*;
 import org.xml.sax.InputSource;
 import java.io.StringReader;
+import javax.xml.parsers.*;
+import org.w3c.dom.Document;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private LatLng searchLoc;
+    private Marker userMark;
+    private ArrayList<Marker> places;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +44,133 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        ImageButton img = (ImageButton) findViewById(R.id.mapMenuIcon);
+        img.setImageResource(R.drawable.menu_list);
+
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.map_menu, menu);
+        return true;
+    }
+
+
+    public void showPlaces(String param){
+        if(searchLoc == null){
+            Context context = getApplicationContext();
+            CharSequence msg = "Must search for an address before getting Place results";
+            int duration = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(context, msg, duration);
+            toast.show();
+            return;
+        }else{
+            MapFragment mapFrag = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+            GoogleMap map = mapFrag.getMap();
+            map.clear();
+            map.addMarker(new MarkerOptions()
+                    .title("Your Search")
+                    .snippet(userMark.getSnippet())
+                    .position(userMark.getPosition()));             //Replace user marker
+            String apiKey = (String)getText(R.string.browser_google_maps_key);
+            String baseUrl = getString(R.string.places_url);
+            baseUrl += String.valueOf(searchLoc.latitude) + "," + String.valueOf(searchLoc.longitude) + "&radius=4000&types="+ param + "&key=" + apiKey;
+            RetrievePlacesData getPlaces = new RetrievePlacesData(this);
+            getPlaces.execute(baseUrl);
+            getPlaces.setMyTaskCompleteListener(new RetrievePlacesData.OnTaskComplete(){
+                @Override
+                public void setMyTaskComplete(String xml){
+                    Log.v("HOPEFULLY REAL XML", xml);
+
+                    XPathFactory xpathFactory = XPathFactory.newInstance();
+                    XPath xpath = xpathFactory.newXPath();
+
+                    InputSource source1 = new InputSource(new StringReader(xml));
+
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+
+                    try{
+
+                        DocumentBuilder db = dbf.newDocumentBuilder();
+                        Document document = db.parse(source1);
+                        boolean morePlaces = true;
+                        int resultIndex = 1;
+                        if(xpath.evaluate("/PlaceSearchResponse/status", document).equals("ZERO_RESULTS")){
+                            Context context = getApplicationContext();
+                            CharSequence msg = "No results found";
+                            int duration = Toast.LENGTH_LONG;
+                            Toast toast = Toast.makeText(context, msg, duration);
+                            toast.show();
+                            return;
+                        }
+
+                        while(xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]", document) != null){
+                            Log.v("PLACE_DATA", "Place Name = "+xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/name/text()", document)+" Place Vicinity = "+xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/vicinity/text()", document) +" Place LatLng= " +xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/geometry/location/lat/text()", document) + " " + xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/geometry/location/lng/text()", document));
+                            Marker tmp = mMap.addMarker(new MarkerOptions()
+                                    .title(xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/name", document))
+                                    .snippet(xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/vicinity", document))
+                                    .position(new LatLng(Double.parseDouble(xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/geometry/location/lat", document)),
+                                            Double.parseDouble(xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/geometry/location/lng", document))))
+                            );
+                            //places.add(tmp);
+                            resultIndex++;
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        String msg = e.getMessage();
+                        Log.e("XPATH ERR", ""+msg);
+                    }
+                }
+            });
+
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.restaurants:
+                showPlaces("restaurant");
+                return true;
+            case R.id.hotels:
+                showPlaces("lodging");
+                return true;
+            case R.id.bars:
+                showPlaces("bar");
+                return true;
+            case R.id.cafes:
+                showPlaces("cafe");
+                return true;
+            case R.id.movie_theaters:
+                showPlaces("movie_theater");
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    public void showMapMenu(View view){
+        openOptionsMenu();
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+    }
 
 
     public void goToAddress(LatLng coord, String address){
         MapFragment mapFrag = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        searchLoc = coord;
         GoogleMap map = mapFrag.getMap();
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 16));
-        map.addMarker(new MarkerOptions()
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 15));
+        map.clear();
+        userMark = map.addMarker(new MarkerOptions()
                 .title("Your Search")
                 .snippet(address)
                 .position(coord));
+        userMark.showInfoWindow();
     }
 
 
@@ -156,7 +286,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double latitude = location.getLatitude();
         LatLng sydney = new LatLng(-33.867, 151.206);
         LatLng userLoc = new LatLng(latitude, longitude);
-
+        mMap = map;
         map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 13));
 

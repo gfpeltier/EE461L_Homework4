@@ -200,6 +200,9 @@
     <!-- From: file:/Users/grantpeltier93/AndroidStudioProjects/EE461LHomework4/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="app_name">EE461L Homework 4</string>
+    <!-- From: file:/Users/grantpeltier93/AndroidStudioProjects/EE461LHomework4/app/src/debug/res/values/google_maps_api.xml -->
+    <eat-comment/>
+    <string name="browser_google_maps_key">AIzaSyDBZD4LHUF2lOaCLB6IXPo_mEgycy9lN00</string>
     <!-- From: file:/Users/grantpeltier93/AndroidStudioProjects/EE461LHomework4/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/common_strings.xml -->
     <eat-comment/>
     <string name="common_android_wear_notification_needs_update_text">An application requires an update to the Android Wear app.</string>
@@ -245,6 +248,13 @@
     </string>
     <!-- From: file:/Users/grantpeltier93/AndroidStudioProjects/EE461LHomework4/app/src/main/res/values/strings.xml -->
     <eat-comment/>
+    <string name="menu_bars">Bars</string>
+    <string name="menu_cafes">Cafes</string>
+    <string name="menu_hotels">Hotels</string>
+    <string name="menu_movie_theaters">Movie Theaters</string>
+    <string name="menu_night_clubs">Clubs</string>
+    <string name="menu_restaurants">Restaurants</string>
+    <string name="places_url">https://maps.googleapis.com/maps/api/place/nearbysearch/xml?location=</string>
     <string name="search_button_text">Go</string>
     <string name="search_hint">Enter an Address...</string>
     <!-- From: file:/Users/grantpeltier93/AndroidStudioProjects/EE461LHomework4/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/admob_strings.xml -->

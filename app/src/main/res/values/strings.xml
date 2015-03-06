@@ -4,4 +4,11 @@
     <string name="search_button_text">Go</string>
     <string name="search_hint">Enter an Address...</string>
     <string name="geocode_url">https://maps.googleapis.com/maps/api/geocode/xml?address=</string>
+    <string name="places_url">https://maps.googleapis.com/maps/api/place/nearbysearch/xml?location=</string>
+    <string name="menu_restaurants">Restaurants</string>
+    <string name="menu_hotels">Hotels</string>
+    <string name="menu_bars">Bars</string>
+    <string name="menu_night_clubs">Clubs</string>
+    <string name="menu_cafes">Cafes</string>
+    <string name="menu_movie_theaters">Movie Theaters</string>
 </resources>

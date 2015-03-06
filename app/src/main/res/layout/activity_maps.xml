@@ -27,6 +27,13 @@
         android:name="com.google.android.gms.maps.MapFragment"
         tools:layout="@layout/activity_maps" >
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_list"
+            android:onClick="showMapMenu"
+            android:id="@+id/mapMenuIcon" />
+
     </fragment>
 
 </LinearLayout>

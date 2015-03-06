@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/restaurants"
+        android:icon="@drawable/fork"
+        android:title="@string/menu_restaurants" />
+    <item
+        android:id="@+id/hotels"
+        android:icon="@drawable/ic_local_hotel"
+        android:title="@string/menu_hotels" />
+    <item
+        android:id="@+id/bars"
+        android:icon="@drawable/bar"
+        android:title="@string/menu_bars" />
+    <item
+        android:id="@+id/cafes"
+        android:icon="@drawable/cafe"
+        android:title="@string/menu_cafes" />
+    <item
+        android:id="@+id/movie_theaters"
+        android:icon="@drawable/theaters"
+        android:title="@string/menu_movie_theaters" />
+</menu>
