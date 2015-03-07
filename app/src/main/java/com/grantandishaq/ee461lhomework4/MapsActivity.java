@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,7 +28,7 @@ import java.io.StringReader;
 import javax.xml.parsers.*;
 import org.w3c.dom.Document;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, PopupMenu.OnMenuItemClickListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LatLng searchLoc;
@@ -50,13 +51,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.map_menu, menu);
-        return true;
-    }
 
 
     public void showPlaces(String param){
@@ -112,9 +106,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.v("PLACE_DATA", "Place Name = "+xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/name/text()", document)+" Place Vicinity = "+xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/vicinity/text()", document) +" Place LatLng= " +xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/geometry/location/lat/text()", document) + " " + xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/geometry/location/lng/text()", document));
                             Marker tmp = mMap.addMarker(new MarkerOptions()
                                     .title(xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/name", document))
-                                    .snippet(xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/vicinity", document))
-                                    .position(new LatLng(Double.parseDouble(xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/geometry/location/lat", document)),
-                                            Double.parseDouble(xpath.evaluate("/PlaceSearchResponse/result["+resultIndex+"]/geometry/location/lng", document))))
+                                    .snippet(xpath.evaluate("/PlaceSearchResponse/result[" + resultIndex + "]/vicinity", document))
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                    .position(new LatLng(Double.parseDouble(xpath.evaluate("/PlaceSearchResponse/result[" + resultIndex + "]/geometry/location/lat", document)),
+                                            Double.parseDouble(xpath.evaluate("/PlaceSearchResponse/result[" + resultIndex + "]/geometry/location/lng", document))))
                             );
                             //places.add(tmp);
                             resultIndex++;
@@ -132,7 +127,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onMenuItemClick(MenuItem item){
         switch(item.getItemId()){
             case R.id.restaurants:
                 showPlaces("restaurant");
@@ -155,7 +150,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     public void showMapMenu(View view){
-        openOptionsMenu();
+        PopupMenu popup = new PopupMenu(this, view);
+
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(this);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.map_menu, popup.getMenu());
+        popup.show();
         mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
     }
 
