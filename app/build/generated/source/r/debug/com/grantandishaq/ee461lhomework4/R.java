@@ -1690,9 +1690,10 @@ containing a value of this type.
         public static final int ic_plusone_standard_off_client=0x7f020053;
         public static final int ic_plusone_tall_off_client=0x7f020054;
         public static final int menu_list=0x7f020055;
-        public static final int powered_by_google_dark=0x7f020056;
-        public static final int powered_by_google_light=0x7f020057;
-        public static final int theaters=0x7f020058;
+        public static final int place_pin=0x7f020056;
+        public static final int powered_by_google_dark=0x7f020057;
+        public static final int powered_by_google_light=0x7f020058;
+        public static final int theaters=0x7f020059;
     }
     public static final class id {
         public static final int action_bar=0x7f0a0045;
@@ -1712,13 +1713,13 @@ containing a value of this type.
         public static final int adjust_height=0x7f0a0016;
         public static final int adjust_width=0x7f0a0017;
         public static final int always=0x7f0a001b;
-        public static final int bars=0x7f0a0059;
+        public static final int bars=0x7f0a005a;
         public static final int beginning=0x7f0a0013;
         public static final int book_now=0x7f0a002b;
         public static final int buyButton=0x7f0a0028;
         public static final int buy_now=0x7f0a002c;
         public static final int buy_with_google=0x7f0a002d;
-        public static final int cafes=0x7f0a005a;
+        public static final int cafes=0x7f0a005b;
         public static final int checkbox=0x7f0a003d;
         public static final int classic=0x7f0a002f;
         public static final int collapseActionView=0x7f0a001c;
@@ -1737,7 +1738,7 @@ containing a value of this type.
         public static final int holo_light=0x7f0a0024;
         public static final int home=0x7f0a0004;
         public static final int homeAsUp=0x7f0a000d;
-        public static final int hotels=0x7f0a0058;
+        public static final int hotels=0x7f0a0059;
         public static final int hybrid=0x7f0a0018;
         public static final int icon=0x7f0a003a;
         public static final int ifRoom=0x7f0a001d;
@@ -1750,15 +1751,16 @@ containing a value of this type.
         public static final int match_parent=0x7f0a002a;
         public static final int middle=0x7f0a0015;
         public static final int monochrome=0x7f0a0031;
-        public static final int movie_theaters=0x7f0a005b;
+        public static final int movie_theaters=0x7f0a005c;
         public static final int never=0x7f0a001e;
         public static final int none=0x7f0a000e;
         public static final int normal=0x7f0a000a;
+        public static final int pinPlaceImageButton=0x7f0a0057;
         public static final int production=0x7f0a0025;
         public static final int progress_circular=0x7f0a0005;
         public static final int progress_horizontal=0x7f0a0006;
         public static final int radio=0x7f0a003f;
-        public static final int restaurants=0x7f0a0057;
+        public static final int restaurants=0x7f0a0058;
         public static final int sandbox=0x7f0a0026;
         public static final int satellite=0x7f0a0019;
         public static final int searchButton=0x7f0a0054;

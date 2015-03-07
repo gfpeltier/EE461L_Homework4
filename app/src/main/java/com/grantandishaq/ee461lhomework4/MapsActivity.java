@@ -34,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng searchLoc;
     private Marker userMark;
     private ArrayList<Marker> places;
+    private boolean placeUserMarker;
 
 
     @Override
@@ -49,12 +50,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ImageButton img = (ImageButton) findViewById(R.id.mapMenuIcon);
         img.setImageResource(R.drawable.menu_list);
 
+        ImageButton pin = (ImageButton) findViewById(R.id.pinPlaceImageButton);
+        pin.setImageResource(R.drawable.place_pin);
+
+        placeUserMarker = false;
+
     }
 
 
 
     public void showPlaces(String param){
-        if(searchLoc == null){
+        if(userMark == null){
             Context context = getApplicationContext();
             CharSequence msg = "Must search for an address before getting Place results";
             int duration = Toast.LENGTH_LONG;
@@ -71,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .position(userMark.getPosition()));             //Replace user marker
             String apiKey = (String)getText(R.string.browser_google_maps_key);
             String baseUrl = getString(R.string.places_url);
-            baseUrl += String.valueOf(searchLoc.latitude) + "," + String.valueOf(searchLoc.longitude) + "&radius=4000&types="+ param + "&key=" + apiKey;
+            baseUrl += String.valueOf(userMark.getPosition().latitude) + "," + String.valueOf(userMark.getPosition().longitude) + "&radius=4000&types="+ param + "&key=" + apiKey;
             RetrievePlacesData getPlaces = new RetrievePlacesData(this);
             getPlaces.execute(baseUrl);
             getPlaces.setMyTaskCompleteListener(new RetrievePlacesData.OnTaskComplete(){
@@ -172,6 +178,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .snippet(address)
                 .position(coord));
         userMark.showInfoWindow();
+    }
+
+
+    public void allowUserPinPlacement(View view){
+        placeUserMarker = true;
+        Context context = getApplicationContext();
+        CharSequence msg = "You may now place your own pin";
+        int duration = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(context, msg, duration);
+        toast.show();
     }
 
 
@@ -290,6 +306,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = map;
         map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 13));
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Log.v("Tap Coordinates", latLng.latitude + " " + latLng.longitude);
+                if(placeUserMarker){
+                    mMap.clear();
+                    userMark = mMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .title("User Placed Marker"));
+                    placeUserMarker = false;
+                }else{return;}
+            }
+        });
 
         /*map.addMarker(new MarkerOptions()
                 .title("Sydney")

@@ -27,12 +27,24 @@
         android:name="com.google.android.gms.maps.MapFragment"
         tools:layout="@layout/activity_maps" >
 
-        <ImageButton
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/menu_list"
-            android:onClick="showMapMenu"
-            android:id="@+id/mapMenuIcon" />
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_list"
+                android:onClick="showMapMenu"
+                android:id="@+id/mapMenuIcon" />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/place_pin"
+                android:onClick="allowUserPinPlacement"
+                android:id="@+id/pinPlaceImageButton"
+                android:layout_toRightOf="@id/mapMenuIcon"/>
+        </RelativeLayout>
+
 
     </fragment>
 
